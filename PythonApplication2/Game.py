@@ -1,3 +1,5 @@
+#controls of the game are left arrow right arrow to move and space to shoot
+
 import pygame
 import random
 import math
@@ -19,16 +21,20 @@ icon = pygame.image.load("stuff//ufo.png")
 pygame.display.set_icon(icon)
 # Player
 playerimg = pygame.image.load("stuff//player.png")
+# Positioning starting position of player
 playerx = 370
 playery = 480
 playerx_change = 0
 # enemy
+#all of these are lists because each enemy will have its own individual value.
 enemyimg = []
 enemy_x = []
 enemy_y = []
 enemyx_change = []
 enemy_y_change = []
+#can change this value to any number to change the amount of enemies on the screen at one time, the code is flexible so it doesnt matter how many enemies.
 num_of_enemies = 7
+#spawning the enemies in a semi random position.
 for i in range(num_of_enemies):
     enemyimg.append(pygame.image.load("stuff//alien.png"))
     enemy_x.append(random.randint(0, 736))
@@ -43,7 +49,7 @@ bullet_x = 0
 bullet_y = 480
 bulletx_change = 0
 bullety_change = 10
-#This variable is being used more as a ENUM than as an actual string value.
+#This variable is being used more as a ENUM than as an actual string value. switching between "ready" and "fire"
 bullet_state = "ready"
 # score
 score_value = 0
@@ -53,7 +59,7 @@ texty = 10
 clock = pygame.time.Clock()
 #game over text
 over_font = pygame.font.Font("freesansbold.ttf", 64)
-# Positioning starting position of player
+
 def showscore(x, y):
     score = font.render("score:" + str(score_value), True, (255, 255, 255))
     screen.blit(score,(x,y))
@@ -82,7 +88,7 @@ def aliencollision(enemyx1,enemyx2,enemyy1,enemyy2):
 def iscollision(enemyx, enemyy, bulletx, bullety):
     #determining if the bullet touches the enemy hitbox
     distance = math.sqrt((math.pow(bulletx - enemyx, 2)) + (math.pow(bullety - enemyy, 2)))
-    if bullet_state is not "fire":
+    if bullet_state != "fire":
         return False
     if distance < 40:
         return True
@@ -94,7 +100,7 @@ while running:
     clock.tick(60)
     # RGB - red green blue
     screen.fill((0, 0, 0))
-    # background
+    # background has to be done first or will override other objects on screen.
     screen.blit(background, (0, 0))
     #There are a series of events that always run in pygame depending on the input, this will check for specific ones that trigger.
     for event in pygame.event.get():
@@ -109,7 +115,7 @@ while running:
                 print("Right arrow pressed")
                 playerx_change = 3
             if event.key == pygame.K_SPACE:
-                if bullet_state is "ready":
+                if bullet_state == "ready":
                     bullet_sound = mixer.Sound("stuff//laser.wav")
                     bullet_sound.set_volume(.4)
                     bullet_sound.play()
@@ -133,7 +139,7 @@ while running:
     if bullet_y <= 0:
         bullet_y = 480
         bullet_state = "ready"
-    if bullet_state is "fire":
+    if bullet_state == "fire":
         fire_bullet(bullet_x, bullet_y)
         bullet_y -= bullety_change
     # enemy movement
